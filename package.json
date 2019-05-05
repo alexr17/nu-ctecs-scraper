@@ -1,0 +1,22 @@
+{
+  "name": "nu-ctecs-scraper",
+  "version": "1.0.0",
+  "description": "scraping northwestern university ctecs",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexr17/nu-ctecs-scraper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexr17/nu-ctecs-scraper/issues"
+  },
+  "homepage": "https://github.com/alexr17/nu-ctecs-scraper#readme",
+  "dependencies": {
+    "puppeteer": "^1.15.0"
+  }
+}
