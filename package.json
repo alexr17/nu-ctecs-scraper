@@ -4,7 +4,8 @@
   "description": "scraping northwestern university ctecs",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js"
+    "test": "node index.js",
+    "debug": "node node_modules/ndb/ndb.js index.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,10 @@
   },
   "homepage": "https://github.com/alexr17/nu-ctecs-scraper#readme",
   "dependencies": {
-    "puppeteer": "^1.15.0"
+    "dotenv": "^8.0.0",
+    "puppeteer": "^1.13.0"
+  },
+  "devDependencies": {
+    "ndb": "^1.0.44"
   }
 }
