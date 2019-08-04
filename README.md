@@ -13,7 +13,12 @@ cd nu-ctecs-scraper
 npm install
 mkdir pup-data
 ```
+#### Configuration
+
+You will need to rename the `._env` file to `.env` with the variables `caesar_username` and `caesar_password` filled in. In addition you will want to make sure that `headless` is set to `false` in `index.js` so that you can set up two factor authentication the first time.
 
 ### Running
-You will need to create a `.env` file with the variables `caesar_username` and `caesar_password`. In addition you will want to make sure that `headless` is set to `false` in `index.js` so that you can set up two factor authentication the first time.
 
+```
+npm run
+```

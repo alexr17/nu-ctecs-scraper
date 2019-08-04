@@ -4,7 +4,7 @@
   "description": "scraping northwestern university ctecs",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js",
+    "run": "node index.js",
     "debug": "node node_modules/ndb/ndb.js index.js"
   },
   "repository": {
