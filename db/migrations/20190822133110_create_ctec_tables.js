@@ -38,8 +38,6 @@ exports.up = function(knex) {
             t.json('challenge_rating');
             t.json('interest_rating');
             t.json('time_spent');
-            t.integer('year', 11);
-            t.string('quarter');
             t.integer('ctec_id', 11).unsigned().references('id').inTable('ctecs');
             t.timestamps(true, true);
         })
