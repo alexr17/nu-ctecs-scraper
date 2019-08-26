@@ -1,25 +1,27 @@
 const knex = require('./../knex_helpers')
 const pluralize = require('pluralize')
 
+// TODO: Create a static LRU cache for the objects inserted into the DB. DB operations are extremely fast though, so it's not that big a deal.
 class Generic {
     constructor(name) {
         this.name = name;
     }
     /**
-     * Creates the object
+     * Creates or finds the object
+     * @returns [Object] the found or created object
      */
-    async create() {
+    async find_or_create() {
         try {
             if (!(await knex.validate_columns(this.table, Object.keys(this)))) {
                 throw ('Columns are invalid!')
             }
 
-            let instance = await knex.find(this.table, this);
+            let instance = await knex.where(this.table, this);
             if (!instance.length) {
-                await knex.insert(this.table, this)
-            } else {
-                console.log('Record already exists in database')
+                let id = await knex.insert(this.table, this);
+                instance = await knex.find(this.table, id);
             }
+            return instance[0];
         }  catch(e) {
             console.log(e)
         } 

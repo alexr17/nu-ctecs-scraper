@@ -16,12 +16,21 @@ module.exports = {
     },
 
     /**
-     * Checks if the columns exist in the table
+     * Where fields are equivalent to the inserted object
      * @param {String} table 
      * @param {Object} object 
      */
-    async find(table, object) {
+    async where(table, object) {
         return await db(table).where(object)
+    },
+
+    /**
+     * Finds by id
+     * @param {String} table 
+     * @param {Integer} id 
+     */
+    async find(table, id) {
+        return await db(table).where({id: id})
     },
 
     /**
