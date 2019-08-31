@@ -2,12 +2,12 @@ const c_util = require('./util')
 
 async function login(page, username, password) {
     await page.click('input[name=IDToken1]', 100);
-    await page.waitFor(500);
-    await page.type('input[name=IDToken1]', username, { delay: 200 })
-    await page.waitFor(500);
+    await page.waitFor(200);
+    await page.type('input[name=IDToken1]', username, { delay: 50 })
+    await page.waitFor(200);
     await page.click('input[name=IDToken2]', 100);
-    await page.waitFor(500);
-    await page.type('input[name=IDToken2]', password, { delay: 200 })
+    await page.waitFor(200);
+    await page.type('input[name=IDToken2]', password, { delay: 50 })
     await page.waitFor(500);
     await page.click('input[name=Login\\.Submit]', 100);
     // await page.waitForSelector('#myId')
@@ -26,7 +26,7 @@ async function login(page, username, password) {
     }
 }
 
-async function gettoctecs(page) {
+async function get_to_ctecs(page) {
     await page.waitFor(1000);
     await c_util.click_text(page, "Manage Classes");
     // There is no other way to wait for the AJAX load of data to go to the next step. Puppeteer will not detect the element on page.waitForSelector() for some reason. If you try to click on search CTECs without letting the AJAX call finish, it won't have any data loaded and you will be stuck.
@@ -44,13 +44,13 @@ async function gettoctecs(page) {
  * 
  * @return {Array<String>} the list of classes for the ctecs
  */
-async function select_subject(page, level='UGRD', dep='EECS') {
+async function get_classes(page, level='UGRD', dep='EECS') {
     await c_util.select_dropdown(page, 'NW_CT_PB_SRCH_ACAD_CAREER', level);
     await page.waitFor(1000);
     await c_util.select_dropdown(page, 'NW_CT_PB_SRCH_SUBJECT', dep);
     await page.waitFor(500);
     await page.click(`#NW_CT_PB_SRCH_SRCH_BTN`);
-    await page.waitFor(1000);
+    await page.waitFor(2000);
     let children = await page.$eval('.ps_grid-body', el => {
         let arr = []
         for (child of el.children) {
@@ -61,14 +61,43 @@ async function select_subject(page, level='UGRD', dep='EECS') {
     return children
 }
 
-async function select_class(page, klass) {
-    await c_util.click_text(page, klass)
-    await page.waitFor(30000)
+/**
+ * Clicks on the specified class, 
+ * @param {Object} page 
+ * @param {String} class_text 
+ * @returns {Array<ElementHandle>} Array of clickable elements
+ */
+async function get_ctec_links(page, class_text) {
+    await c_util.click_text(page, class_text);
+    await page.waitForNavigation();
+    await page.waitFor(1000);
+    const box = await page.$('.ps_box-group.psc_layout.ctec-result-grid')
+    const ctecs_links = await box.$$('.ps_grid-row.psc_rowact')
+    return ctecs_links
+}
+
+/**
+ * 
+ * @param {Object} browser 
+ * @param {Object} page 
+ * @param {Object} link 
+ */
+async function scrape_ctec(browser, page, link) {
+    // Get the new tab
+    await link.click();
+    do {
+        await page.waitFor(1000)
+    }
+    while ((await browser.pages()).length < 2);
+    page = (await browser.pages())[1]
+
+    console.log(page.html())
 }
 
 module.exports = {
     login: login,
-    gettoctecs: gettoctecs,
-    select_subject: select_subject,
-    select_class: select_class
+    get_to_ctecs: get_to_ctecs,
+    get_classes: get_classes,
+    get_ctec_links: get_ctec_links,
+    scrape_ctec: scrape_ctec
 }

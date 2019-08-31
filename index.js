@@ -10,16 +10,43 @@ const caesar = require('./caesar');
             headless: false,
             userDataDir: 'pup-data/',
         });
+        await (await browser.pages())[0].close(); // Closing about:blank page
         const page = await browser.newPage();
         await page.setViewport({ width: 1366, height: 768 });
         page.on('console', msg => console.log('PAGE LOG:', msg.text()));
-        await page.goto('https://caesar.ent.northwestern.edu');
-        await page.waitForNavigation();
-        await page.waitFor(500);
-        await caesar.login(page, process.env.caesar_username, process.env.caesar_password)
-        await page.waitFor(500);
-        await caesar.gettoctecs(page);
-        let class_list = await caesar.select_subject(page, 'UGRD', 'EECS');
+
+        // Get to Homepage
+        await Promise.all([
+            page.goto('https://caesar.ent.northwestern.edu'),
+            page.waitForNavigation({ waitUntil: 'networkidle0' })
+        ]);
+
+        // Login
+        await Promise.all([
+            await page.waitFor(500),
+            caesar.login(page, process.env.caesar_username, process.env.caesar_password),
+            page.waitForNavigation({ waitUntil: 'networkidle0' })
+        ]);
+
+        // Get to ctecs
+        await Promise.all([
+            await page.waitFor(500),
+            caesar.get_to_ctecs(page),
+            page.waitForNavigation({ waitUntil: 'networkidle0' })
+            
+        ]);
+
+        // Get list of classes for department
+        let class_list = await caesar.get_classes(page, 'UGRD', 'EECS');
+
+        let ctec_links = await caesar.get_ctec_links(page, class_list[0]);
+        for (const link of ctec_links) {
+            const label = await page.evaluate(el => el.innerText, link);
+            // console.log(label.replace(class_list[0], ''))
+        }
+        // await caesar.scrape_ctec(browser, page, ctec_list[0])
+        await page.waitFor(10000);
+
         await browser.close();
 
     }

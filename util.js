@@ -1,4 +1,5 @@
 async function click_text(page, text, element='span', count=0) {
+    console.log(`Clicking on text: ${text}`)
     const links = await page.$x(`//${element}[contains(text(), '${text}')]`);
 
     if (links.length > 0) {
