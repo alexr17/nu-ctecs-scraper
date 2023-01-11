@@ -19,7 +19,7 @@
   "homepage": "https://github.com/alexr17/nu-ctecs-scraper#readme",
   "dependencies": {
     "dotenv": "^8.0.0",
-    "knex": "^0.19.2",
+    "knex": "^2.4.0",
     "mysql": "^2.16.0",
     "pluralize": "^8.0.0",
     "puppeteer": "^1.13.0"
